@@ -1,7 +1,7 @@
-package ec.edu.ups.compras.controller;
+package ec.edu.ups.compras.controller.compra;
 
-import ec.edu.ups.compras.model.Producto;
-import ec.edu.ups.compras.service.producto.IProductoService;
+import ec.edu.ups.compras.model.Compra;
+import ec.edu.ups.compras.service.compra.ICompraService;
 import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,19 +15,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @RestController
-@RequestMapping("/api/producto")
-public class ProductoController {
+@RequestMapping("/api/compra")
+public class CompraController {
 
     @Autowired
-    private IProductoService productoService;
+    private ICompraService compraService;
 
-    private ApiMessage apiMessage;
+    private ApiMessage message;
 
     @PostMapping
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarProducto(@RequestBody Producto producto) {
-        apiMessage = productoService.registrarProducto(producto);
-        return Response.status(Response.Status.OK).entity(apiMessage).build();
+    public Response guardarCompra(@RequestBody Compra compra) {
+        message = compraService.registrarCompra(compra);
+        return Response.status(Response.Status.OK).entity(message).build();
     }
+
 }

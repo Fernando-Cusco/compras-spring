@@ -1,10 +1,12 @@
 package ec.edu.ups.compras.service.cliente;
 
+import ec.edu.ups.compras.helpers.ClienteRegistro;
 import ec.edu.ups.compras.model.Cliente;
-import ec.edu.ups.compras.repository.ClienteRepository;
+import ec.edu.ups.compras.model.Usuario;
+import ec.edu.ups.compras.repository.cliente.ClienteRepository;
+import ec.edu.ups.compras.repository.usuario.UsuarioRepository;
 import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,26 +15,39 @@ public class ClienteService implements IClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     private ApiMessage apiMessage;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public ApiMessage registrarCliente(Cliente cliente) {
-        Cliente cc = clienteRepository.findClienteByCedula(cliente.getCedula());
-        Cliente cm = clienteRepository.findClienteByCorreo(cliente.getCorreo());
-        if (cc != null) {
-            apiMessage = new ApiMessage("La cédula ya existe", 100, false);
-            return apiMessage;
-        } if (cm != null) {
-            apiMessage = new ApiMessage("El correo ya existe", 101, false);
-            return apiMessage;
+    public ApiMessage registrarCliente(ClienteRegistro clienteRegistro) {
+        Usuario usuario = usuarioRepository.findUsuarioByCorreo(clienteRegistro.getCorreo());
+        Cliente cliente = clienteRepository.findClienteByCedula(clienteRegistro.getCedula());
+        System.out.println(clienteRegistro.toString());
+        if (usuario != null) {
+            System.out.println("Existe usuario");
+            if (cliente != null) {
+                System.out.println("Cliente ya esta registrado");
+                apiMessage = new ApiMessage("La cédula registrada", 100, false);
+            } else {
+                System.out.println("Creando Cliente");
+                Cliente c = new Cliente();
+                c.setNombres(clienteRegistro.getNombres());
+                c.setApellidos(clienteRegistro.getApellidos());
+                c.setDireccion(clienteRegistro.getDireccion());
+                c.setUsuario(usuario);
+                usuario.setCliente(c);
+                c.setCedula(clienteRegistro.getCedula());
+                clienteRepository.save(c);
+                apiMessage = new ApiMessage("Cliente registrado correctamente", 200, true);
+            }
+        } else {
+            apiMessage = new ApiMessage("Usuario no registrado", 100, false);
+            System.out.println("NO Existe usuario");
         }
-        String passwordEncrypt = passwordEncoder.encode(cliente.getPassword());
-        cliente.setPassword(passwordEncrypt);
-        clienteRepository.save(cliente);
-        apiMessage = new ApiMessage("Cliente registrado correctamente", 200, true);
+
         return apiMessage;
     }
 
@@ -41,10 +56,6 @@ public class ClienteService implements IClienteService {
         return clienteRepository.findClienteByCedula(cedula);
     }
 
-    @Override
-    public Cliente buscarClientePorCorreo(String correo) {
-        return clienteRepository.findClienteByCorreo(correo);
-    }
 
     @Override
     public Cliente buscarClientePorId(int id) {
@@ -56,13 +67,4 @@ public class ClienteService implements IClienteService {
         return clienteRepository.findAll();
     }
 
-    @Override
-    public Cliente login(String correo, String password) {
-        Cliente cliente = buscarClientePorCorreo(correo);
-        if (cliente != null) {
-            boolean ok = passwordEncoder.matches(password, cliente.getPassword());
-            return ok? cliente: null;
-        }
-        return null;
-    }
 }

@@ -1,4 +1,4 @@
-package ec.edu.ups.compras.repository;
+package ec.edu.ups.compras.repository.cliente;
 
 import ec.edu.ups.compras.model.Cliente;
 import org.springframework.data.repository.CrudRepository;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface ClienteRepository extends CrudRepository<Cliente, Integer> {
 
     Cliente findClienteByCedula(String cedula);
-    Cliente findClienteByCorreo(String correo);
     Cliente findClienteById(int id);
 
 

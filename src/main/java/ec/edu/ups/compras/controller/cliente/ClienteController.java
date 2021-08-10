@@ -1,6 +1,7 @@
-package ec.edu.ups.compras.controller;
+package ec.edu.ups.compras.controller.cliente;
 
 
+import ec.edu.ups.compras.helpers.ClienteRegistro;
 import ec.edu.ups.compras.model.Cliente;
 import ec.edu.ups.compras.service.cliente.IClienteService;
 import ec.edu.ups.compras.utils.ApiMessage;
@@ -28,9 +29,9 @@ public class ClienteController {
     @PostMapping
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarCliente(@RequestBody Cliente cliente) {
+    public Response registrarCliente(@RequestBody ClienteRegistro clienteRegistro) {
         try {
-            apiMessage = service.registrarCliente(cliente);
+            apiMessage = service.registrarCliente(clienteRegistro);
             if (apiMessage.getCode() == 200) {
                 return Response.status(Response.Status.CREATED).entity(apiMessage).build();
             }
@@ -46,24 +47,11 @@ public class ClienteController {
     public Response buscarClientePorCedula(@PathVariable("cedula") String cedula) {
         Cliente cliente = service.buscarClientePorCedula(cedula);
         if (cliente != null) {
-            cliente.setPassword("");
             return Response.status(Response.Status.OK).entity(cliente).build();
         }
         apiMessage = new ApiMessage("Error", 103, false);
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(apiMessage).build();
     }
 
-    @PostMapping("/cedenciales")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public ResponseEntity<Object> credenciales(@RequestBody Credenciales credenciales){
-        Cliente cliente = service.login(credenciales.getCorreo(), credenciales.getPassword());
-        if (cliente != null) {
-//            return Response.status(Response.Status.OK).entity(cliente).build();
-            return new ResponseEntity<>(cliente, HttpStatus.OK);
-        }
-//        return Response.status(Response.Status.BAD_REQUEST).build();
-        apiMessage = new ApiMessage("Credenciales Incorrectas", 104, false);
-        return new ResponseEntity<>(apiMessage, HttpStatus.BAD_REQUEST);
-    }
+
 }

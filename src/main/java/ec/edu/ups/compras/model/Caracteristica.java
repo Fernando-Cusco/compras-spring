@@ -10,7 +10,7 @@ import java.util.Date;
 public class Caracteristica {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String nombre;
 

@@ -1,4 +1,4 @@
-package ec.edu.ups.compras.repository;
+package ec.edu.ups.compras.repository.role;
 
 import ec.edu.ups.compras.model.Role;
 import org.springframework.data.repository.CrudRepository;

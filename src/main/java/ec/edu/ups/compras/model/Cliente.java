@@ -1,16 +1,13 @@
 package ec.edu.ups.compras.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -31,18 +28,6 @@ public class Cliente implements Serializable {
     @NotBlank(message = "Cédula es obligatoria")
     private String cedula;
 
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @JsonProperty("fecha_nacimiento")
-    private Date fechaNacimiento;
-
-    @Column(unique = true)
-    @NotBlank(message = "Correo es obligatorio")
-    @Email(message = "Correo no es correcto")
-    private String correo;
-    @NotBlank(message = "Contraseña es obligatoria")
-    private String password;
-
     @Column(name = "create_at")
     @JsonIgnore
     private Date createdAt;
@@ -51,14 +36,15 @@ public class Cliente implements Serializable {
     @JsonIgnore
     private Date updatedAt;
 
-    private boolean estado;
+    private String direccion;
 
-    @ManyToMany
-    @JoinTable(name = "clientes_roles",
-                joinColumns = @JoinColumn(name = "cliente_id",
-                        referencedColumnName = "id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    @OneToOne(mappedBy = "cliente")
+    @JsonIgnore
+    private Usuario usuario;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Compra> compras;
 
     @PrePersist
     public void init() {
@@ -66,20 +52,15 @@ public class Cliente implements Serializable {
         this.updatedAt = new Date();
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
+
+
+
+    public List<Compra> getCompras() {
+        return compras;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
+    public void setCompras(List<Compra> compras) {
+        this.compras = compras;
     }
 
     public int getId() {
@@ -114,30 +95,6 @@ public class Cliente implements Serializable {
         this.cedula = cedula;
     }
 
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -156,4 +113,19 @@ public class Cliente implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

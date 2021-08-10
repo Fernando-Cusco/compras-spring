@@ -16,7 +16,7 @@ import java.util.List;
 public class Producto implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
     @Column(unique = true)
@@ -60,6 +60,9 @@ public class Producto implements Serializable {
     @Column(name = "updated_at")
     @JsonIgnore
     private Date updatedAt;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Imagen> imagenes;
 
     @PrePersist
     public void init() {
@@ -176,6 +179,14 @@ public class Producto implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
     }
 
     private static final long serialVersionUID = 1L;

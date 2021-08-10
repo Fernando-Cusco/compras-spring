@@ -1,7 +1,7 @@
 package ec.edu.ups.compras.service.producto;
 
 import ec.edu.ups.compras.model.Producto;
-import ec.edu.ups.compras.repository.ProductoRepository;
+import ec.edu.ups.compras.repository.producto.ProductoRepository;
 import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +30,10 @@ public class ProductoService implements IProductoService {
     @Override
     public Producto buscarProductoPorId(int id) {
         return repository.findProductoById(id);
+    }
+
+    @Override
+    public Iterable<Producto> productos() {
+        return repository.findAll();
     }
 }
