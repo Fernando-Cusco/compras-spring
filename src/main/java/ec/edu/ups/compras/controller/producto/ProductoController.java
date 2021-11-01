@@ -34,7 +34,7 @@ public class ProductoController {
 
     @GetMapping("/lista")
     @Produces(MediaType.APPLICATION_JSON)
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER_WRITE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER_READ')")
     public ResponseEntity<Object> productos() {
         Iterable<Producto> productos = productoService.productos();
         return ResponseEntity.ok(productos);

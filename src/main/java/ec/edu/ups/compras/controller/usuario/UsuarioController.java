@@ -25,7 +25,6 @@ public class UsuarioController {
 
     private Usuario usuario;
 
-
     @PostMapping
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +48,15 @@ public class UsuarioController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response buscarUsuarioPorCorreo(@PathVariable("correo") String correo) {
         Usuario usuario = usuarioService.buscarUsuarioPorCorreo(correo);
+        return Response.status(Response.Status.OK).entity(usuario).build();
+    }
+
+    @GetMapping("/perfil/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response buscarUsuarioPorId(@PathVariable("id") int id) {
+        Usuario usuario = usuarioService.buscarUsuarioPorId(id);
+        usuario.setPassword("");
+        usuario.getCliente();
         return Response.status(Response.Status.OK).entity(usuario).build();
     }
 

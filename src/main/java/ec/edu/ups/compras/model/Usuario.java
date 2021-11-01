@@ -60,7 +60,6 @@ public class Usuario implements Serializable  {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
-    @JsonIgnore
     private Cliente cliente;
 
     private String token;

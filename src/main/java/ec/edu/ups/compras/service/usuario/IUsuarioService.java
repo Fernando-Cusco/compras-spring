@@ -16,4 +16,6 @@ public interface IUsuarioService {
 
     public Role usuarioRoles(String correo);
 
+    public Usuario buscarUsuarioPorId(int id);
+
 }

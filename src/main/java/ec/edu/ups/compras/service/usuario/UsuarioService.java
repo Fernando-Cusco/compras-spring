@@ -69,5 +69,10 @@ public class UsuarioService implements IUsuarioService{
         return usuarioRepository.usuarioRoles(correo);
     }
 
+    @Override
+    public Usuario buscarUsuarioPorId(int id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
 
 }
