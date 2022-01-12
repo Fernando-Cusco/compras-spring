@@ -1,5 +1,6 @@
 package ec.edu.ups.compras;
 
+import ec.edu.ups.compras.model.Cliente;
 import ec.edu.ups.compras.model.Role;
 import ec.edu.ups.compras.model.Usuario;
 import ec.edu.ups.compras.repository.role.RoleRepository;
@@ -31,7 +32,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (alreadySetup)
+        if (!alreadySetup)
             return;
         createRoleIfNotFound("ROLE_ADMIN", "read-write-delete");
         createRoleIfNotFound("ROLE_USER_READ", "read");
@@ -43,9 +44,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Usuario usuario = new Usuario();
         usuario.setCorreo("admin@admin.com");
         usuario.setPassword(passwordEncoder.encode("admin"));
-        usuario.setUsername("administrador");
         usuario.setEstado(true);
         usuario.setRoles(Arrays.asList(adminRole));
+        Cliente cliente = new Cliente();
+        cliente.setUsuario(usuario);
+        cliente.setApellidos("admin");
+        cliente.setNombres("admin");
+        cliente.setCedula("0000000000");
+        cliente.setDireccion("Ec");
+        usuario.setCliente(cliente);
         usuarioRepository.save(usuario);
         alreadySetup = true;
     }

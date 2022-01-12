@@ -9,6 +9,8 @@ import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class ClienteService implements IClienteService {
 
@@ -25,29 +27,35 @@ public class ClienteService implements IClienteService {
     public ApiMessage registrarCliente(ClienteRegistro clienteRegistro) {
         Usuario usuario = usuarioRepository.findUsuarioByCorreo(clienteRegistro.getCorreo());
         Cliente cliente = clienteRepository.findClienteByCedula(clienteRegistro.getCedula());
-        System.out.println(clienteRegistro.toString());
+
         if (usuario != null) {
-            System.out.println("Existe usuario");
-            if (cliente != null) {
-                System.out.println("Cliente ya esta registrado");
+            if (cliente != null && Objects.equals(usuario.getCliente(), cliente)) {
+                System.out.println("actualizando");
+                clienteRepository.updateCliente(cliente.getId(), clienteRegistro.getNombres(), clienteRegistro.getApellidos(), clienteRegistro.getCedula(), clienteRegistro.getDireccion());
+                apiMessage = new ApiMessage("Cliente actualizado correctamente", 200, true);
+            }
+            else if (cliente != null && !Objects.equals(usuario.getCliente(), cliente)) {
                 apiMessage = new ApiMessage("La cédula registrada", 100, false);
+                System.out.println("error");
             } else {
+                System.out.println("creando");
                 System.out.println("Creando Cliente");
-                Cliente c = new Cliente();
+                Cliente c = usuario.getCliente();
                 c.setNombres(clienteRegistro.getNombres());
                 c.setApellidos(clienteRegistro.getApellidos());
                 c.setDireccion(clienteRegistro.getDireccion());
+                c.setCedula(clienteRegistro.getCedula());
                 c.setUsuario(usuario);
                 usuario.setCliente(c);
-                c.setCedula(clienteRegistro.getCedula());
-                clienteRepository.save(c);
-                apiMessage = new ApiMessage("Cliente registrado correctamente", 200, true);
+                c.setUsuario(usuario);
+//                clienteRepository.save(c);
+                usuarioRepository.save(usuario);
+                apiMessage = new ApiMessage("Cliente actualizado correctamente", 200, true);
             }
         } else {
             apiMessage = new ApiMessage("Usuario no registrado", 100, false);
             System.out.println("NO Existe usuario");
         }
-
         return apiMessage;
     }
 
@@ -66,5 +74,4 @@ public class ClienteService implements IClienteService {
     public Iterable<Cliente> clientes() {
         return clienteRepository.findAll();
     }
-
 }

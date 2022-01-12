@@ -18,4 +18,6 @@ public interface IUsuarioService {
 
     public Usuario buscarUsuarioPorId(int id);
 
+    public Usuario actualizar(Usuario usuario);
+
 }

@@ -31,6 +31,7 @@ public class ImagenService implements IImagenService{
 
     @Override
     public String guardar(MultipartFile file) {
+        init();
         if (!file.isEmpty()) {
             Path rootPath = root.resolve(file.getOriginalFilename()).toAbsolutePath();
             File f = rootPath.toFile();

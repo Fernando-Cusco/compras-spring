@@ -17,15 +17,15 @@ public class Cliente implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
-    @NotBlank(message = "Nombres es obligatorio")
+//    @NotBlank(message = "Nombres es obligatorio")
     private String nombres;
 
-    @NotBlank(message = "Apellido es obligatorio")
+//    @NotBlank(message = "Apellido es obligatorio")
     private String apellidos;
 
-    @Column(unique = true, length = 10)
-    @Size(min = 10, max = 10)
-    @NotBlank(message = "Cédula es obligatoria")
+//    @Column(unique = true, length = 10)
+//    @Size(min = 10, max = 10)
+//    @NotBlank(message = "Cédula es obligatoria")
     private String cedula;
 
     @Column(name = "create_at")

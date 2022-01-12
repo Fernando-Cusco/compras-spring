@@ -1,7 +1,9 @@
 package ec.edu.ups.compras.controller.usuario;
 
 
+import ec.edu.ups.compras.helpers.Mensaje;
 import ec.edu.ups.compras.model.Usuario;
+import ec.edu.ups.compras.service.cliente.IClienteService;
 import ec.edu.ups.compras.service.usuario.IUsuarioService;
 import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,11 @@ public class UsuarioController {
 
     private Usuario usuario;
 
-    @PostMapping
+    @PostMapping("/registro")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ResponseEntity<Object> registrarUsuario(@RequestBody Usuario usuario) {
+
         apiMessage = usuarioService.registrarUsuario(usuario);
         return ResponseEntity.ok(apiMessage);
     }
@@ -41,23 +44,39 @@ public class UsuarioController {
         if (usuario != null) {
             return ResponseEntity.ok(usuario);
         }
-        return ResponseEntity.ok("Credenciales Incorrecta");
+        Usuario usuario = new Usuario();
+        usuario.setId(0);
+        usuario.setCorreo("");
+        usuario.setPassword("");
+        usuario.setTelefono(0);
+        usuario.setEstado(false);
+        usuario.setToken("");
+        return ResponseEntity.ok(usuario);
     }
 
     @GetMapping("/{correo}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarUsuarioPorCorreo(@PathVariable("correo") String correo) {
+    public ResponseEntity<Object> buscarUsuarioPorCorreo(@PathVariable("correo") String correo) {
         Usuario usuario = usuarioService.buscarUsuarioPorCorreo(correo);
-        return Response.status(Response.Status.OK).entity(usuario).build();
+        usuario.setPassword("");
+        return ResponseEntity.ok(usuario);
     }
 
     @GetMapping("/perfil/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarUsuarioPorId(@PathVariable("id") int id) {
+    public ResponseEntity<Object> buscarUsuarioPorId(@PathVariable("id") int id) {
         Usuario usuario = usuarioService.buscarUsuarioPorId(id);
         usuario.setPassword("");
         usuario.getCliente();
-        return Response.status(Response.Status.OK).entity(usuario).build();
+        return ResponseEntity.ok(usuario);
+    }
+
+    @PutMapping("/actualizar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResponseEntity<Object> actualizar(@RequestBody Usuario usuario) {
+        Usuario u = usuarioService.actualizar(usuario);
+        u.setPassword("");
+        return ResponseEntity.ok(u);
     }
 
 }

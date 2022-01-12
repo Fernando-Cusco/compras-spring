@@ -20,9 +20,6 @@ public class Usuario implements Serializable  {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
 
-    @Column(unique = true)
-    private String username;
-
 
     @Column(unique = true)
     @NotBlank(message = "Correo es obligatorio")
@@ -78,13 +75,6 @@ public class Usuario implements Serializable  {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getCorreo() {
         return correo;

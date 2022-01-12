@@ -5,9 +5,7 @@ import ec.edu.ups.compras.helpers.ClienteRegistro;
 import ec.edu.ups.compras.model.Cliente;
 import ec.edu.ups.compras.service.cliente.IClienteService;
 import ec.edu.ups.compras.utils.ApiMessage;
-import ec.edu.ups.compras.utils.Credenciales;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,31 +24,29 @@ public class ClienteController {
 
     private ApiMessage apiMessage;
 
-    @PostMapping
+    @PutMapping
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registrarCliente(@RequestBody ClienteRegistro clienteRegistro) {
+    public ResponseEntity<Object> registrarCliente(@RequestBody ClienteRegistro clienteRegistro) {
+        System.out.println(clienteRegistro.toString());
         try {
             apiMessage = service.registrarCliente(clienteRegistro);
-            if (apiMessage.getCode() == 200) {
-                return Response.status(Response.Status.CREATED).entity(apiMessage).build();
-            }
-            return Response.status(Response.Status.BAD_REQUEST).entity(apiMessage).build();
+            return ResponseEntity.ok().body(apiMessage);
         } catch (Exception e) {
-            apiMessage = new ApiMessage("Error: "+e.getMessage(), 500, false);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(apiMessage).build();
+            apiMessage = new ApiMessage("Error: "+e.toString(), 500, false);
+            return ResponseEntity.internalServerError().body(apiMessage);
         }
     }
 
     @GetMapping("/{cedula}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buscarClientePorCedula(@PathVariable("cedula") String cedula) {
+    public ResponseEntity<Object> buscarClientePorCedula(@PathVariable("cedula") String cedula) {
         Cliente cliente = service.buscarClientePorCedula(cedula);
         if (cliente != null) {
-            return Response.status(Response.Status.OK).entity(cliente).build();
+            return ResponseEntity.ok(cliente);
         }
         apiMessage = new ApiMessage("Error", 103, false);
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(apiMessage).build();
+        return ResponseEntity.badRequest().body(apiMessage);
     }
 
 

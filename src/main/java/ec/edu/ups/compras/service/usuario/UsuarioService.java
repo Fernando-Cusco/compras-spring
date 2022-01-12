@@ -1,6 +1,7 @@
 package ec.edu.ups.compras.service.usuario;
 
 import ec.edu.ups.compras.auth.TokenProvider;
+import ec.edu.ups.compras.model.Cliente;
 import ec.edu.ups.compras.model.Role;
 import ec.edu.ups.compras.model.Usuario;
 import ec.edu.ups.compras.repository.role.RoleRepository;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 
 @Service
 public class UsuarioService implements IUsuarioService{
@@ -33,10 +35,16 @@ public class UsuarioService implements IUsuarioService{
             apiMessage.setCode(200);
             apiMessage.setStatus(false);
         } else {
+            Cliente cliente = new Cliente();
+            cliente.setCedula("");
+            cliente.setNombres("");
+            cliente.setApellidos("");
+            cliente.setDireccion("");
             Role user = roleRepository.findByName("ROLE_USER_READ");
             usuario.setRoles(Arrays.asList(user));
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-
+            cliente.setUsuario(usuario);
+            usuario.setCliente(cliente);
             usuarioRepository.save(usuario);
             apiMessage.setMessage("Usuario registrado correctamente");
             apiMessage.setCode(100);
@@ -72,6 +80,19 @@ public class UsuarioService implements IUsuarioService{
     @Override
     public Usuario buscarUsuarioPorId(int id) {
         return usuarioRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Usuario actualizar(Usuario usuario) {
+        Usuario u = buscarUsuarioPorId(usuario.getId());
+        if (u != null) {
+            Date updateAt = new Date();
+            u.setFechaNacimiento(usuario.getFechaNacimiento());
+            u.setTelefono(usuario.getTelefono());
+            u.setUpdatedAt(updateAt);
+            return usuarioRepository.save(u);
+        }
+        return null;
     }
 
 
