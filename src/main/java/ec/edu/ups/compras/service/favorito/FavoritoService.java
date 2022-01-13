@@ -50,6 +50,18 @@ public class FavoritoService implements IFavoritoService {
     }
 
     @Override
+    public ApiMessage eliminarFavorito(String cedula, int idProducto) {
+        Cliente cliente = clienteRepository.findClienteByCedula(cedula);
+        Producto producto = productoService.buscarProductoPorId(idProducto);
+        favoritoRepository.deleteFavoritoByClienteAndProducto(cliente, producto);
+        ApiMessage apiMessage = new ApiMessage();
+        apiMessage.setCode(200);
+        apiMessage.setMessage("Favorito eliminado");
+        apiMessage.setStatus(true);
+        return apiMessage;
+    }
+
+    @Override
     public List<Favorito> listarFavoritosPorCliente(int id) {
         return favoritoRepository.findByClienteId(id);
     }

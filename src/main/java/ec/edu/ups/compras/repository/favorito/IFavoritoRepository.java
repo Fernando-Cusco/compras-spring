@@ -5,6 +5,7 @@ import ec.edu.ups.compras.model.Favorito;
 import ec.edu.ups.compras.model.Producto;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,6 +13,9 @@ import java.util.List;
 public interface IFavoritoRepository extends CrudRepository<Favorito, Integer> {
 
     public Favorito findByClienteAndProducto(Cliente cliente, Producto producto);
+
+    @Transactional
+    public void deleteFavoritoByClienteAndProducto(Cliente cliente, Producto producto);
 
     public List<Favorito> findByClienteId(int id);
 
