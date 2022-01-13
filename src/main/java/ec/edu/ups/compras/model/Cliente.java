@@ -46,6 +46,10 @@ public class Cliente implements Serializable {
     @JsonIgnore
     private List<Compra> compras;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Favorito> favoritos;
+
     @PrePersist
     public void init() {
         this.createdAt = new Date();
@@ -53,7 +57,13 @@ public class Cliente implements Serializable {
     }
 
 
+    public List<Favorito> getFavoritos() {
+        return favoritos;
+    }
 
+    public void setFavoritos(List<Favorito> favoritos) {
+        this.favoritos = favoritos;
+    }
 
     public List<Compra> getCompras() {
         return compras;

@@ -12,5 +12,8 @@ public interface IProductoService {
 
     public Producto buscarProductoPorId(int id);
 
-    public Iterable<Producto> productos();
+    public Iterable<Producto> productos(String id);
+
+    public Iterable<Producto> productosAngular();
+
 }

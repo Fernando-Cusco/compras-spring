@@ -64,10 +64,24 @@ public class Producto implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Imagen> imagenes;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Favorito> favoritos;
+
+    @Transient
+    private boolean esFavorito;
+
     @PrePersist
     public void init() {
         this.createdAt = new Date();
         this.updatedAt = new Date();
+    }
+
+    public boolean isEsFavorito() {
+        return esFavorito;
+    }
+
+    public void setEsFavorito(boolean esFavorito) {
+        this.esFavorito = esFavorito;
     }
 
     public void agregarCaracteristica(Caracteristica caracteristica) {
@@ -75,6 +89,14 @@ public class Producto implements Serializable {
             caracteristicas = new ArrayList<>();
         }
         caracteristicas.add(caracteristica);
+    }
+
+    public List<Favorito> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(List<Favorito> favoritos) {
+        this.favoritos = favoritos;
     }
 
     public int getId() {

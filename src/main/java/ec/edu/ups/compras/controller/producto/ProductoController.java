@@ -32,11 +32,19 @@ public class ProductoController {
         return ResponseEntity.ok(apiMessage);
     }
 
+    @GetMapping("/lista/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER_READ')")
+    public ResponseEntity<Object> productos(@PathVariable("id") String id) {
+        Iterable<Producto> productos = productoService.productos(id);
+        return ResponseEntity.ok(productos);
+    }
+
     @GetMapping("/lista")
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize("hasRole('ROLE_ADMIN') OR hasRole('ROLE_USER_READ')")
-    public ResponseEntity<Object> productos() {
-        Iterable<Producto> productos = productoService.productos();
+    public ResponseEntity<Object> productosAngular() {
+        Iterable<Producto> productos = productoService.productosAngular();
         return ResponseEntity.ok(productos);
     }
 
