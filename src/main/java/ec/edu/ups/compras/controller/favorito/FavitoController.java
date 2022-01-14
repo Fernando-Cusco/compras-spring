@@ -1,6 +1,7 @@
 package ec.edu.ups.compras.controller.favorito;
 
 
+import ec.edu.ups.compras.model.Favorito;
 import ec.edu.ups.compras.service.favorito.IFavoritoService;
 import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/compra")
+@RequestMapping("/api/favorito")
 public class FavitoController {
 
     @Autowired
@@ -19,14 +21,14 @@ public class FavitoController {
 
     private ApiMessage apiMessage;
 
-    @PostMapping("/favorito/{cedula}/{id}")
+    @PostMapping("/{cedula}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public ResponseEntity<Object> favorito(@PathVariable("cedula") String cedula, @PathVariable("id") int id){
         apiMessage = favoritoService.createFavorito(cedula, id);
         return  ResponseEntity.ok().body(apiMessage);
     }
 
-    @DeleteMapping("/favorito/{cedula}/{id}")
+    @DeleteMapping("/{cedula}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public ResponseEntity<Object> eliminarFavorito(@PathVariable("cedula") String cedula, @PathVariable("id") int id){
         try {
@@ -35,6 +37,13 @@ public class FavitoController {
             apiMessage = new ApiMessage("error "+e.getMessage(), 100, false);
         }
         return  ResponseEntity.ok().body(apiMessage);
+    }
+
+    @GetMapping("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ResponseEntity<Object> listarFavoritosPorCliente(@PathVariable("id") int id){
+        List<Integer> favoritos = favoritoService.listarProductosFavoritosPorCliente(id);
+        return  ResponseEntity.ok().body(favoritos);
     }
 
 }

@@ -11,6 +11,7 @@ import ec.edu.ups.compras.utils.ApiMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -64,6 +65,18 @@ public class FavoritoService implements IFavoritoService {
     @Override
     public List<Favorito> listarFavoritosPorCliente(int id) {
         return favoritoRepository.findByClienteId(id);
+    }
+
+    @Override
+    public List<Integer> listarProductosFavoritosPorCliente(int id){
+        List<Integer> productosId = new ArrayList<>();
+        List<Favorito> favoritos = favoritoRepository.findByClienteId(id);
+        if (!favoritos.isEmpty()) {
+            for (Favorito f : favoritos) {
+                productosId.add(f.getProducto().getId());
+            }
+        }
+        return (favoritos.isEmpty()) ? new ArrayList<>() : productosId;
     }
 
     @Override

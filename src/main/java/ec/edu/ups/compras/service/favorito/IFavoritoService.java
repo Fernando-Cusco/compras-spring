@@ -15,5 +15,7 @@ public interface IFavoritoService {
 
     public List<Favorito> listarFavoritosPorCliente(int id);
 
+    public List<Integer> listarProductosFavoritosPorCliente(int id);
+
     public List<Favorito> listarFavoritosPorIdProducto(int id);
 }
